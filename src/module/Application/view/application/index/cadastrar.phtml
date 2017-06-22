@@ -1,0 +1,111 @@
+<?php
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+
+<fieldset>
+
+    <legend>Cadastrar Curso</legend>
+    <div class="row">
+        <div class="form-group col-md-6 col-xs-6">
+            <?php echo $this->formLabel($form->get('nmCurso')); ?>
+            <?php echo $this->formInput($form->get('nmCurso')); ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-2 col-xs-2">
+            <?php echo $this->formLabel($form->get('sgCurso')); ?>
+            <?php echo $this->formInput($form->get('sgCurso')); ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-2 col-xs-2">
+            <?php echo $this->formLabel($form->get('chCurso')); ?>
+            <?php echo $this->formInput($form->get('chCurso')); ?>
+        </div>
+    </div>
+
+    <div class="pull-left">
+        <button type="button" name="cancelar" class="btn btn-default" id="cancelar" value="Cancelar"> Cancelar </button>
+        <button type="button" name="button" class="btn btn-primary" id="salvar" value="Salvar"> Salvar</button>
+    </div>
+
+    <?php echo $this->form()->closeTag(); ?>
+
+</fieldset>
+
+
+<script>
+
+    $(document).ready(function () {
+        //'use strict';
+        cancelar();
+        siglaCaixaAlta();
+        validaCampos();
+        voltarTopo();
+        limparCampos();
+    });
+
+    function siglaCaixaAlta() {
+        $('#sgCurso').on('blur', function () {
+            $(this).val($(this).val().toUpperCase());
+        });
+    }
+
+    function validaCampos() {
+        var elemento = ['input', 'select'];
+        var valida = true;
+
+        $('form ' + elemento).each(function () {
+            $(this).parent('div').removeClass('has-error');
+            if ($(this).attr('required') && !$.val()){
+                $(this).parent('div').addClass('has-error');
+                valida = false;
+            }
+        });
+        return valida;
+    }
+
+    function voltarTopo() {
+        $('html, body').animate({scrollTop:0}, 'slow');
+    }
+
+    function cancelar() {
+        $('#cancelar').on('click', function () {
+            window.location.assign('/');
+        });
+    }
+
+    function salvar() {
+        $('#salvar').on('click', function () {
+            validaCampos();
+        });
+    }
+
+    function limparCampos() {
+
+        $('#limpar').click(function () {
+
+            var campos = ['input', 'select'];
+
+            $('form ' + campos).each(function (key, value) {
+                if (($(value).hasClass('usuario-consulta'))) {
+                    $(this).val("");
+                }
+            });
+        });
+    }
+
+    //    function limparCampos(elemento) {
+    //        $('form' + elemento).each(function () {
+    //            $(this).val('');
+    //            if ($(this).prop('type') == 'RADIO' || $(this).prop('type') == 'CHECKBOX'){
+    //                $(this).prop('check', false);
+    //            }
+    //        });
+    //    }
+
+</script>
