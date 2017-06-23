@@ -35,9 +35,10 @@ class CursoService
         return $this->getEntityManager()->getRepository(self::$entity);
     }
 
-    public function findAll(){
+    public function listarCursos(){
         return $this->getRepository()->findAll();
     }
+
 
     public function save(Array $data = array()){
         if(isset($data['id'])){

@@ -5,6 +5,7 @@ namespace Application\Form;
 use Application\Entity\Curso;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
+use Zend\Form\Hidden;
 
 class CadastrarCurso extends Form
 {

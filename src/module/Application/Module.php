@@ -2,8 +2,10 @@
 
 namespace Application;
 
+use Application\Service\CursoService;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\ServiceManager;
 
 class Module
 {
@@ -29,4 +31,16 @@ class Module
             ),
         );
     }
+
+    public function getServiceConfig(){
+        return array(
+            'factories' => array(
+                "CursoService" => function(ServiceManager $serviceManager){
+                    $em = $serviceManager->get('Doctrine\ORM\EntityManager');
+                    return new CursoService($serviceManager, $em);
+                }
+            ),
+        );
+    }
+
 }
