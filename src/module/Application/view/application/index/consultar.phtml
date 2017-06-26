@@ -27,9 +27,17 @@ echo $this->form()->openTag($form);
         <button type="button" name="button" class="btn btn-primary" id="consultar" value="Consultar"> Consultar</button>
     </div>
 
-    <div class="row" style="display: none;" id="divTabelaUsuario">
+    <div class="row" style="display: none;" id="divTabelaCurso">
         <div class="form-group col-ms-12 col-xs-12">
             <table class="table display" id="DadosTabela" style="word-break:break-all">
+                <thead>
+                    <tr>
+                        <th style="width: 15%">Nome</th>
+                        <th style="width: 25%">Sigla</th>
+                        <th style="width: 20%">Carga Horaria</th>
+                        <th style="width: 10%">Ação</th>
+                    </tr>
+                </thead>
 
                 <tbody id="tbodyTable">
 
@@ -47,7 +55,7 @@ echo $this->form()->openTag($form);
     $(document).ready(function () {
         //'use strict';
         cadastrar();
-        consultar();
+        consultarCurso();
     });
 
     function cadastrar() {
@@ -56,31 +64,99 @@ echo $this->form()->openTag($form);
         });
     }
 
-    function consultar() {
+    function consultarCurso() {
         $('#consultar').click(function () {
-            $.ajax({
-                datatype: 'JSON',
-                url: "listar-curso",
-                type: "GET",
-                success: function (data) {
-                    var retorno = JSON.parse(data);
-                    console.log(retorno.dados);
-                    var dataSet = [];
-                    $.each(retorno.dados, function (index, data) {
-                        dataSet.push([data.noCurso, data.sgCurso, data.chCurso])
-                    });
-                    $('#DadosTabela').DataTable({
-                        data: dataSet,
-                        columns: [
-                            {title: 'Nome'},
-                            {title: 'Sigla'},
-                            {title: "CargaHoraria"}
-                        ]
-                    });
+
+            $('#divTabelaCurso').show();
+//            $('#DadosTabela').DataTable().destroy();
+            $('#DadosTabela').DataTable({
+                'searching': false,
+                "pageLength": 10,
+                "language": {
+                    "sEmptyTable": "Nenhum registro encontrado para o filtro informado",
+                    "sInfo": "Mostrando de START até END de TOTAL registros",
+                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                    "sInfoFiltered": "(Filtrados de MAX registros)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "_MENU_ resultados por página",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "sSearch": "Pesquisar",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    }
+                },
+                "ajax": {
+                    url: "/application/index/consultar",
+                    dataType: "JSON",
+                    type: "POST",
+                    data: {
+                        "nome": $('#nmCurso').val(),
+                        "sigla": $('#sgCurso').val(),
+                        "cargahoraria": $('#chCurso').val()
+                    },
+                    dataSrc: ""
+                },
+                'columns': [
+                    {"data": "nmCurso"},
+                    {"data": "sgCurso"},
+                    {"data": "chCurso"},
+                    {
+                        'class': 'text-center',
+                        "data":
+                            function (data) {
+                                    return '<a href="/application/index/cadastrar?id=' + data.coUsuario + '" data-toggle="tooltip" title="Editar">' +
+                                        '<i class="fa fa-pencil text-primary"></i>' +
+                                        '</a>'
+                            }
+
+                    }
+                ],
+                "infoCallback": function (settings, start, end, max, total, pre) {
+                    start = (total == 0) ? 0 : start;
+
+                    if (start == 0) {
+                        $('#btnExportaCSV').prop('disabled', true);
+                    } else {
+                        $('#btnExportaCSV').prop('disabled', false);
+                    }
+
+                    return "Mostrando registros de " + start + " a " + end + " de um total de " + total
+                        + ((total !== max) ? " (filtrado de" + max + " total registros)" : "");
                 }
             });
         });
     }
 
+//            $.ajax({
+//                datatype: 'JSON',
+//                url: "listar-curso",
+//                type: "GET",
+//                success: function (data) {
+//                    var retorno = JSON.parse(data);
+//                    var dataSet = [];
+//                    $.each(retorno.dados, function (index, data) {
+//                        dataSet.push([data.noCurso, data.sgCurso, data.chCurso])
+//                    });
+//                    $('#DadosTabela').DataTable({
+//                        data: dataSet,
+//                        columns: [
+//                            {title: 'Nome'},
+//                            {title: 'Sigla'},
+//                            {title: "CargaHoraria"}
+//                        ]
+//                    });
+//                }
+//            });
+//        });
 
 </script>

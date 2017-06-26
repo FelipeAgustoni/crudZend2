@@ -41,10 +41,11 @@ echo $this->form()->openTag($form);
 <script>
 
     $(document).ready(function () {
+        $('#chCurso').mask("99:99");
         //'use strict';
         cancelar();
         siglaCaixaAlta();
-        validaCampos();
+        validaCamposObrigatorios();
         voltarTopo();
         limparCampos();
     });
@@ -55,13 +56,11 @@ echo $this->form()->openTag($form);
         });
     }
 
-    function validaCampos() {
-        var elemento = ['input', 'select'];
+    function validaCamposObrigatorios(elementos) {
         var valida = true;
-
-        $('form ' + elemento).each(function () {
+        $('form ' + elementos).each(function () {
             $(this).parent('div').removeClass('has-error');
-            if ($(this).attr('required') && !$.val()){
+            if ($(this).attr('required') && !$.trim($(this).val()){
                 $(this).parent('div').addClass('has-error');
                 valida = false;
             }
@@ -81,31 +80,15 @@ echo $this->form()->openTag($form);
 
     function salvar() {
         $('#salvar').on('click', function () {
-            validaCampos();
+            validaCamposObrigatorios();
         });
     }
 
     function limparCampos() {
-
-        $('#limpar').click(function () {
-
-            var campos = ['input', 'select'];
-
-            $('form ' + campos).each(function (key, value) {
-                if (($(value).hasClass('usuario-consulta'))) {
-                    $(this).val("");
-                }
-            });
+        var campos = ['input'];
+        $('form ' + campos).each(function (){
+            $(this).val("");
         });
     }
-
-    //    function limparCampos(elemento) {
-    //        $('form' + elemento).each(function () {
-    //            $(this).val('');
-    //            if ($(this).prop('type') == 'RADIO' || $(this).prop('type') == 'CHECKBOX'){
-    //                $(this).prop('check', false);
-    //            }
-    //        });
-    //    }
 
 </script>

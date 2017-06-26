@@ -5,7 +5,7 @@ namespace Application\Form;
 use Application\Entity\Curso;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
-use Zend\Form\Hidden;
+use Zend\Form\Element\Hidden;
 
 class CadastrarCurso extends Form
 {
@@ -21,6 +21,13 @@ class CadastrarCurso extends Form
             'name', $this->_nome,
             'class', $this->_nome,
         ));
+
+        // Id
+        $idCurso = new Hidden('idCurso');
+        $idCurso->setAttributes(array(
+            'id' => 'idCurso'
+        ));
+        $this->add($idCurso);
 
         // Nome
         $nmCurso = new Text('nmCurso');
